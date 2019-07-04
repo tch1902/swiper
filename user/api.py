@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.shortcuts import render
 
@@ -6,7 +7,8 @@ from django.shortcuts import render
 from common import utils, errors, config
 from libs.http import render_json
 from user import logic
-from user.models import User
+from user.forms import ProfileForm
+from user.models import User, Profile
 
 
 def verify_phone(request):
@@ -23,8 +25,8 @@ def verify_phone(request):
         else:
             return render_json(code=errors.SMS_SEND_ERR)
 
-
     return render_json(code=errors.PHONE_NUM_ERR)
+
 
 def login(request):
     phone_num = request.POST.get('phone_num')
@@ -45,5 +47,27 @@ def login(request):
 
     return render_json(data=user.to_dict())
 
+#个人信息
+def get_profile(request):
+    # uid=request.GET.get('uid')
+    # user=User.objects.get(id=uid)
+    # profile=Profile.objects.get(id=uid)
+    profile=request.user.profile
+    return render_json(data=profile.to_dict(exclude=['vibration','only_matche','auto_play']))
 
 
+def set_profile(request):
+    user=request.user
+    form=ProfileForm(request.POST)
+    if form.is_valid():
+        profile=form.save(commit=False)
+        #手动创建 一对一 关系
+        profile.id=user.id
+        profile.save()
+
+        return render_json()
+    else:
+        return render_json(data=form.errors)
+
+def upload_profile(request):
+    pass

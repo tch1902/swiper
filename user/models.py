@@ -3,6 +3,10 @@ import datetime
 from django.db import models
 
 # Create your models here.
+from django.utils.functional import cached_property
+
+from libs.orm import ModelToDictMixin
+
 
 class User(models.Model):
     '''
@@ -24,12 +28,19 @@ class User(models.Model):
     avatar = models.CharField(max_length=256)
     location = models.CharField(max_length=64)
 
-    @property   #声明成user对象的属性
+    # @property   #声明成user对象的属性
+    @cached_property
     def age(self):
         today=datetime.date.today()
         birthday=datetime.date(self.birth_year,self.birth_mohth,self.birth_day)
         return (today-birthday).days//365
 
+    @property
+    def profile(self):
+        if not hasattr(self,'_profile'):
+            self._profile, _ =Profile.objects.get_or_create(id=self.id)
+
+        return self._profile
 
     def to_dict(self):
         return {'uid':self.id,'phonenum':self.phonenum,
@@ -40,3 +51,29 @@ class User(models.Model):
 
     class Meta:
         db_table = "users"
+
+class Profile(models.Model,ModelToDictMixin):
+    LOCATIONS=(
+        ('bj','北京'),
+        ('sz','深圳'),
+        ('sh','上海'),
+    )
+
+    SEXS=(
+        (0,'全部'),
+        (1,'男'),
+        (2,'女')
+    )
+
+    location=models.CharField(max_length=64,choices=LOCATIONS)
+    min_distance=models.IntegerField(default=1)
+    max_distance=models.IntegerField(default=10)
+    min_dating_age=models.IntegerField(default=18)
+    max_dating_age=models.IntegerField(default=81)
+    dating_sex=models.IntegerField(default=0,choices=SEXS)
+    vibration=models.BooleanField(default=True)
+    only_matche=models.BooleanField(default=True)
+    auto_play=models.BooleanField(default=True)
+
+    class Meta:
+        db_table = "profile"
