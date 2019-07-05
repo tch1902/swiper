@@ -1,3 +1,6 @@
+import os
+import time
+
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.shortcuts import render
@@ -5,7 +8,9 @@ from django.shortcuts import render
 
 # Create your views here.
 from common import utils, errors, config
+
 from libs.http import render_json
+from swiper import settings
 from user import logic
 from user.forms import ProfileForm
 from user.models import User, Profile
@@ -42,6 +47,13 @@ def login(request):
         return render_json(code=errors.VERIFY_CODE_ERR)
 
     #2.登陆 注册
+    # try:
+    #     user = User.objects.get(phonenum=phone)
+    # except User.DoesNotExist:
+    #     user = User.objects.create(phonenum=phone)
+    #     # 创建用户的同时，使用 user.id 创建 Profile 对象，建立一对一的关联
+    #     Profile.objects.create(id=user.id)
+
     user,create=User.objects.get_or_create(phonenum=phone_num)
     request.session['uid']=user.id
 
@@ -58,16 +70,50 @@ def get_profile(request):
 
 def set_profile(request):
     user=request.user
-    form=ProfileForm(request.POST)
+    form=ProfileForm(request.POST,instance=user.profile)
+    # form=ProfileForm(request.POST)
     if form.is_valid():
-        profile=form.save(commit=False)
+        # profile=form.save(commit=False)
         #手动创建 一对一 关系
-        profile.id=user.id
-        profile.save()
+        # profile.id=user.id
+        form.save()
 
         return render_json()
     else:
         return render_json(data=form.errors)
 
-def upload_profile(request):
-    pass
+#保存到本地
+def upload_profile1(request):
+    avatar=request.FILES.get('avatar')
+    user=request.user
+    filename='avatar-%s-%d'%(user.id,int(time.time()))
+    filepath=os.path.join(settings.MEDIA_ROOT,filename)
+
+    #wb:二进制写入，wb+：可读可写
+    with open(filepath,'wb+') as output:
+        for chunk in avatar.chunks():
+            output.write(chunk)
+
+    user.avatar=filename
+    user.save()
+
+    return render_json(data=user.avatar)
+
+#异步
+def upload_avatar(request):
+    avatar = request.FILES.get('avatar')
+    user = request.user
+
+    # filename = 'avatar-%s-%d' % (user.id, int(time.time()))
+    # filepath = os.path.join(settings.MEDIA_ROOT, filename)
+    #
+    # with open(filepath, 'wb+') as output:
+    #     for chunk in avatar.chunks():
+    #         output.write(chunk)
+
+    ret = logic.async_upload_avatar(user, avatar)
+
+    if ret:
+        return render_json()
+    else:
+        return render_json(code=errors.AVATAR_UPLOAD_ERR)

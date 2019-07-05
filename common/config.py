@@ -19,3 +19,10 @@ YZX_SMS_PARAMS = {
 #缓存 key prefix
 VERIFY_CODE_CACHE_PREFIX='verfiy_cpde:%s'
 
+#七牛云配置
+ACCESS_KEY = 'Iti8rKoa9Ey3rOJlGgz0zaCT58kvqN47Qy2m6jh6'
+SECRET_KEY = 'Lju4wCmZe52Zkp3sgFTqgx_QSy9MKsws36uWVeMV'
+# 要上传的空间
+BUCKET_NAME = 'myblog'
+HOST='http://www.chenyyuan.com'
+
