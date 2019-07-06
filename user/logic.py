@@ -23,7 +23,6 @@ def send_verify_code(phone_num):
 
     if ret:
         cache.set(config.VERIFY_CODE_CACHE_PREFIX % phone_num,code,60*60)
-
     return sms.send(phone_num, code)
 
 def upload_file(filename, f):
@@ -54,7 +53,7 @@ def async_upload_avatar(user, avatar):
     ret = upload_qiniuyun(filename, filepath)
 
     if ret:
-        user.avatar = urljoin(config.QN_HOST, filename)
+        user.avatar = urljoin(config.HOST, filename)
         user.save()
 
     return ret

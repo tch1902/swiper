@@ -19,20 +19,36 @@ class User(models.Model):
     avatar        头像
     location      常居地
     '''
+    LOCATIONS = (
+        ('bj', '北京'),
+        ('sz', '深圳'),
+        ('sh', '上海'),
+        ('gz','广州'),
+        ('cd','成都'),
+        ('dl','大连'),
+    )
+
+    SEXS = (
+        (0, '全部'),
+        (1, '男'),
+        (2, '女')
+    )
+
+
     phonenum = models.CharField(max_length=11,unique=True)
     nickname = models.CharField(max_length=32)
-    sex = models.CharField(default=0,max_length=100)
+    sex = models.CharField(default=0,max_length=100,choices=SEXS)
     birth_year = models.IntegerField(default=2000)
-    birth_mohth = models.IntegerField(default=1)
+    birth_month = models.IntegerField(default=1)
     birth_day = models.IntegerField(default=1)
     avatar = models.CharField(max_length=256)
-    location = models.CharField(max_length=64)
+    location = models.CharField(max_length=64,choices=LOCATIONS)
 
     # @property   #声明成user对象的属性
     @cached_property
     def age(self):
         today=datetime.date.today()
-        birthday=datetime.date(self.birth_year,self.birth_mohth,self.birth_day)
+        birthday=datetime.date(self.birth_year,self.birth_month,self.birth_day)
         return (today-birthday).days//365
 
     @property
@@ -57,6 +73,9 @@ class Profile(models.Model,ModelToDictMixin):
         ('bj','北京'),
         ('sz','深圳'),
         ('sh','上海'),
+        ('gz', '广州'),
+        ('cd', '成都'),
+        ('dl', '大连'),
     )
 
     SEXS=(
