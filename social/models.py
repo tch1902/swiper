@@ -76,7 +76,7 @@ class Friend(models.Model):
         :return:
         '''
         uid1,uid2=(uid1,uid2) if uid1<uid2 else (uid2,uid1)
-        cls.objects.delete(uid1=uid1, uid2=uid2)
+        cls.objects.filter(uid1=uid1, uid2=uid2).delete()
 
     class Meta:
         db_table='friends'
