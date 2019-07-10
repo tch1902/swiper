@@ -11,19 +11,21 @@ from worker import celery_app
 
 
 def send_verify_code(phone_num):
-    '''
+    """
     发送验证码
     :param phone_num:
     :return:
-    '''
-    # 发送验证码
+    """
+    # 生成验证码
     # 调用短信接口，发送验证码
     code = utils.gen_random_code(6)
-    ret=sms.send(phone_num,code)
+    ret = sms.send(phone_num, code)
 
     if ret:
-        cache.set(config.VERIFY_CODE_CACHE_PREFIX % phone_num,code,60*60)
-    return sms.send(phone_num, code)
+        cache.set(config.VERIFY_CODE_CACHE_PREFIX % phone_num, code, 60 * 60)
+
+    return ret
+
 
 def upload_file(filename, f):
     filepath = os.path.join(settings.MEDIA_ROOT, filename)
@@ -53,9 +55,7 @@ def async_upload_avatar(user, avatar):
     ret = upload_qiniuyun(filename, filepath)
 
     if ret:
-        user.avatar = urljoin(config.HOST, filename)
+        user.avatar = urljoin(config.QN_HOST, filename)
         user.save()
 
     return ret
-
-

@@ -9,12 +9,12 @@ class ProfileForm(forms.ModelForm):
     #     return super().clean()
 
     def clean_max_distance(self):
-        max_distance=self.cleaned_data.get('max_distance',0)
-        min_distance=self.cleaned_data.get('min_distance',0)
+        max_distance = self.cleaned_data.get('max_distance', 0)
+        min_distance = self.cleaned_data.get('min_distance', 0)
 
-
-        if max_distance<min_distance:
+        if max_distance < min_distance:
             raise forms.ValidationError('最大距离必须大于最小距离')
+
         return max_distance
 
     def clean_max_dating_age(self):
@@ -23,8 +23,9 @@ class ProfileForm(forms.ModelForm):
 
         if max_dating_age < min_dating_age:
             raise forms.ValidationError('最大年龄必须大于最小年龄')
+
         return max_dating_age
 
     class Meta:
-        model=Profile
-        fields='__all__'
+        model = Profile
+        fields = '__all__'
