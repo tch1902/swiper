@@ -15,39 +15,35 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'k-9%5+yg7d%w@$m8l8d_w*_p@f4+7j%1=u3(&-$$8u0ywao&k)'
+SECRET_KEY = '&dlge=jg#(vw&v_z611krbc=ujgd$spk^78nm1gn53(ws)(@s7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
     'user.apps.UserConfig',
     'social.apps.SocialConfig',
-
+    'vip.apps.VipConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'common.middleware.AuthMiddleware',
-    'common.middleware.LogicExceptionMiddleware'
+    'common.middleware.LogicExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'swiper.urls'
@@ -68,7 +64,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'swiper.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -77,6 +72,27 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+}
+
+# 缓存配置
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            # "PASSWORD": "mysecret",
+            "PICKLE_VERSION": -1,
+            "SOCKET_CONNECT_TIMEOUT": 5,  # 连接超时时间
+            "SOCKET_TIMEOUT": 5,  # 获取数据超时时间
+        }
+    }
+}
+
+REDIS = {
+    'host': 'localhost',
+    'port': 6379,
+    'db': 2
 }
 
 
@@ -98,7 +114,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -112,11 +127,9 @@ USE_L10N = True
 
 USE_TZ = False
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
 
-
-MEDIA_ROOT=os.path.join(BASE_DIR,'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

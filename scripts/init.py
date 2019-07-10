@@ -14,7 +14,8 @@ django.setup()
 
 
 from user.models import User
-from vip.models import Vip, VipPermission, Permission
+from vip.models import Vip, Permission, VipPermission
+
 
 last_names = (
     '赵钱孙李周吴郑王冯陈褚卫蒋沈韩杨'

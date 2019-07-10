@@ -1,32 +1,36 @@
-'''
+"""
 业务模块配置
-'''
+"""
+# 缓存 key prefix
+VERIFY_CODE_CACHE_PREFIX = 'verfiy_code:%s'
+REWIND_CACHE_PREFIX = 'rewind:%s'
+PROFILE_DATA_CACHE_PREFIX = 'profile_data:%s'
+MODEL_CACHE_PREFIX = 'model:%s:%s'
+HOT_RANK_KEY = 'hot_rank'
 
+# 社交模块配置
+REWIND_TIMES = 3
+
+SWIPE_SCORES={
+    'like':5,
+    'superlike':8,
+    'dislike':0
+}
 
 # 云之讯短信平台配置
 YZX_SMS_URL = 'https://open.ucpaas.com/ol/sms/sendsms'
 
 YZX_SMS_PARAMS = {
-    'sid':'bc2595d7eee20ccc2a5d16ab04437f65',
-    'token':'cc1108c6c4a0a0f31fb56b9c21d4d370',
-    'appid':'c16ea9ea865b42dfba7d90c1dca3338b',
-    'templateid':'482027',
-    'param':None,
-    'mobile':None
-
+    'sid': '22ac8d51a958dc580d8503173199845c',
+    'token': '8f44a2423cba9bf316d6197e88bfd3ac',
+    'appid': '14595d89fddf4bbfa633f497a673a0b8',
+    'templateid': '481679',
+    'param': None,
+    'mobile': None
 }
 
-#缓存 key prefix
-VERIFY_CODE_CACHE_PREFIX='verfiy_code:%s'
-REWIND_CACHE_PREFIX='rewind:%s'
-
-#七牛云配置
-ACCESS_KEY = 'Iti8rKoa9Ey3rOJlGgz0zaCT58kvqN47Qy2m6jh6'
-SECRET_KEY = 'Lju4wCmZe52Zkp3sgFTqgx_QSy9MKsws36uWVeMV'
-# 要上传的空间
-BUCKET_NAME = 'myblog'
-HOST='http://www.chenyyuan.com'
-
-#用户每天撤销次数
-REWIND_TIMES=3
-
+# 七牛云配置
+QN_ACCESS_KEY = 'ktgbAUqxq6D2WZ0PXRhRY4s5TvW2W_NcpuspuhcG'
+QN_SECRET_KEY = 'XmsJZNH9LgCySF667ZtF-QZI1P6iI2tZXTwZw9ea'
+QN_BUCKET = 'swiper'
+QN_HOST = 'http://pu420clqe.bkt.clouddn.com'

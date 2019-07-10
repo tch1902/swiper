@@ -1,8 +1,5 @@
-from urllib.parse import urljoin
+from qiniu import Auth, put_file
 
-from qiniu import Auth, put_data, put_file
-
-#云库存储图片
 from common import config
 
 
